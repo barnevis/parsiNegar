@@ -356,11 +356,14 @@ export class Editor {
     _getListPrefix(line) {
         const trimmedLine = line.trim();
         if (trimmedLine === '') return null;
-
-        // لیست بازبینه
-        const checklistMatch = line.match(/^(\s*[-*+]\s*\[\s?\]\s*)/);
-        if (checklistMatch) return checklistMatch[0];
-
+    
+        // بازبینه (باید قبل از لیست نامرتب بررسی شود)
+        const checklistMatch = line.match(/^(\s*[-*+]\s+)\[\s?[xX]?\]/);
+        if (checklistMatch) {
+            // همیشه با یک بازبینه خالی جدید ادامه بده
+            return `${checklistMatch[1]}[ ] `;
+        }
+    
         // لیست نامرتب
         const unorderedMatch = line.match(/^(\s*[-*+]\s+)/);
         if (unorderedMatch) return unorderedMatch[1];
@@ -462,9 +465,9 @@ export class Editor {
             const selectedBlock = value.substring(lineStart, lineEnd);
             const lines = selectedBlock.split('\n');
 
-            const unorderedRegex = /^\s*[-*+]\s+/;
+            const unorderedRegex = /^\s*[-*+]\s+(?!\[)/; // Avoid matching checklists
             const orderedRegex = /^\s*[0-9۰-۹]+\.\s+/;
-            const checklistRegex = /^\s*[-*+]\s+\[[ xX]?\]\s+/;
+            const checklistRegex = /^\s*[-*+]\s+\[\s?[xX]?\]\s*/; // Match checked or unchecked
             const quoteRegex = /^\s*>\s?/;
 
             const nonEmptyLines = lines.filter(line => line.trim() !== '');
@@ -498,9 +501,6 @@ export class Editor {
                 // Apply formatting
                 let counter = 1;
                 newLines = lines.map(line => {
-                    if (line.trim() === '' && action !== 'quote') {
-                        return line;
-                    }
                     // When applying, first clean up any other list-like format.
                     let cleanLine = line
                         .replace(checklistRegex, '') // More specific, check first
@@ -520,7 +520,16 @@ export class Editor {
 
             const newBlock = newLines.join('\n');
             this.el.value = value.substring(0, lineStart) + newBlock + value.substring(lineEnd);
-            this.el.setSelectionRange(lineStart, lineStart + newBlock.length);
+            
+            // اگر فرمت را روی یک خط (که انتخاب نشده بود) اعمال کردیم، مکان‌نما را جابجا کن
+            if (start === end && lines.length === 1) {
+                const originalLine = value.substring(lineStart, lineEnd);
+                const lengthChange = newBlock.length - originalLine.length;
+                const newCursorPos = start + lengthChange;
+                this.el.setSelectionRange(newCursorPos, newCursorPos);
+            } else {
+                this.el.setSelectionRange(lineStart, lineStart + newBlock.length);
+            }
         } else {
             // Logic for non-list actions (bold, italic, etc.)
             const start = this.el.selectionStart;
