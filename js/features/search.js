@@ -202,11 +202,11 @@ export function init(editor) {
 
     document.addEventListener('keydown', (e) => {
         const isCtrl = e.ctrlKey || e.metaKey;
-        if (isCtrl && e.key === 'f') {
+        if (isCtrl && e.key === 'f' && !e.altKey) {
             e.preventDefault();
             openSearchBar();
         }
-        if (isCtrl && e.key === 'h') {
+        if (isCtrl && e.key === 'h' && !e.altKey) {
              e.preventDefault();
              openSearchBar();
              elements.replaceInput.focus();
