@@ -13,6 +13,7 @@
 @import url('./layout/_app.css');
 @import url('./layout/_content.css');
 @import url('./layout/_side-panel.css');
+@import url('./layout/_activity-bar.css');
 @import url('./layout/_status-bar.css');
 
 /* 3. Component Styles */

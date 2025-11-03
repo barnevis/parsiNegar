@@ -44,14 +44,19 @@ export const elements = {
   fileSize: qs('#fileSize'),
   filename: qs('#filename'),
 
-  // پنل کناری
+  // پنل کناری و نوار فعالیت
+  sideBar: qs('#sideBar'),
+  activityBar: qs('#activityBar'),
+  activityBarButtons: qsa('.activity-bar-btn'),
+  activitySettingsBtn: qs('#activitySettingsBtn'),
   sidePanel: qs('#sidePanel'),
+  sidePanelHeader: qs('#sidePanelHeader'),
+  sidePanelTitle: qs('#sidePanelTitle'),
+  closeSidePanelBtn: qs('#closeSidePanelBtn'),
   tocPanel: qs('#tocPanel'),
   filesPanel: qs('#filesPanel'),
   tocList: qs('.toc-list'),
   filesList: qs('.files-list'),
-  filesTabBtn: qs('.side-panel-tab[data-tab="files"]'),
-  tocTabBtn: qs('.side-panel-tab[data-tab="toc"]'),
   filesControls: qs('.files-controls'),
   fileSortContainer: qs('#fileSortContainer'),
   fileSortToggle: qs('#fileSortToggle'),
@@ -102,8 +107,7 @@ export const elements = {
   fontFamilySelect: qs('#fontFamily'),
   showToolbarCheckbox: qs('#showToolbar'),
   showStatusBarCheckbox: qs('#showStatusBar'),
-  showTocCheckbox: qs('#showToc'),
-  showFilesCheckbox: qs('#showFiles'),
+  showSideBarCheckbox: qs('#showSideBar'),
   showFilenameCheckbox: qs('#showFilename'),
   directionRadios: Array.from(qsa('input[name="direction"]')),
   

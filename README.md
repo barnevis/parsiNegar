@@ -19,7 +19,7 @@
 ## ویژگی‌ها
 
 - پشتیبانی کامل از زبان فارسی و نوشتار راست به چپ (RTL)
-- پشتیبانی از مفسر [شه‌نشان](https://github.com/barnevis/ShahNeshan) و [marked](https://github.com/markedjs/marked) و [parsNeshan](github.com/alirho/parsneshan)
+- پشتیبانی از مفسر [شه‌نشان](https://github.com/barnevis/ShahNeshan) و [marked](https://github.com/markedjs/marked) و [parsNeshan](github.com/barnevis/parsneshan)
 - نمایش زنده و همزمان با نوشتن
 - نمایش آمار متن (تعداد نویسه، کلمه، خط و حجم پرونده)
 - قابلیت تغییر فونت
@@ -38,7 +38,7 @@
 
 ### استفاده آنلاین
 
-برای استفاده آنلاین از پارسی‌نگار، کافی است به وب‌سایت پروژه مراجعه کنید: [پارسی‌نگار](https://alirho.github.io/parsiNegar)
+برای استفاده آنلاین از پارسی‌نگار، کافی است به وب‌سایت پروژه مراجعه کنید: [پارسی‌نگار](https://barnevis.github.io/parsiNegar)
 
 ### اجرای محلی
 
@@ -47,7 +47,7 @@
 1. مخزن پروژه را کلون کنید:
 
 ```bash
-git clone https://github.com/alirho/parsiNegar.git
+git clone https://github.com/barnevis/parsiNegar.git
 ```
 
 2. به دایرکتوری پروژه بروید:
@@ -79,7 +79,7 @@ cd parsiNegar
 
 پارسی‌نگار با بهره‌گیری از کتابخانه‌ها و ابزارهای متن‌باز فوق‌العاده‌ای ساخته شده است. در ادامه لیستی از این ابزارها آمده است:
 
-- **[markdown-it](https://github.com/markdown-it/markdown-it):** مفسر مارک‌داون مدرن و قابل توسعه که به عنوان پایه‌ی مفسر سفارشی «[پارس‌نشان](https://github.com/alirho/parsneshan)» استفاده شده است.
+- **[markdown-it](https://github.com/markdown-it/markdown-it):** مفسر مارک‌داون مدرن و قابل توسعه که به عنوان پایه‌ی مفسر سفارشی «[پارس‌نشان](https://github.com/barnevis/parsneshan)» استفاده شده است.
 - **[Marked.js](https://github.com/markedjs/marked):** یک مفسر سریع و سبک برای پردازش مارک‌داون استاندارد.
 - **[شه‌نشان (ShahNeshan)](https://github.com/barnevis/ShahNeshan):** مفسر مارک‌داون دیگری که برای پردازش بهینه متون فارسی طراحی شده است.
 - **[highlight.js](https://github.com/highlightjs/highlight.js):** برای هایلایت کردن سینتکس بلوک‌های کد در زبان‌های مختلف برنامه‌نویسی.

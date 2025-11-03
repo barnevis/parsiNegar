@@ -7,6 +7,7 @@ import { init as initFileManager } from './features/fileManager.js';
 import { init as initSearch } from './features/search.js';
 import { init as initSettings } from './features/settings.js';
 import { init as initSidePanel } from './features/sidePanel.js';
+import { init as initActivityBar } from './features/activityBar.js';
 import { init as initStatusBar } from './features/statusBar.js';
 import { EventBus } from './core/eventBus.js';
 import { state } from './core/state.js';
@@ -28,8 +29,9 @@ class ParsiNegarApp {
   initComponents() {
     // ماژول‌هایی که به رویدادهای اولیه گوش می‌دهند باید اول مقداردهی شوند
     initSidePanel();
+    initSettings();
+    initActivityBar();
     
-    initSettings(); // تنظیمات باید بعد از SidePanel بارگذاری شود تا رویدادها دریافت شوند
     initPreview();
     initToolbar(this.editor);
     initAutoSave(this.editor);
@@ -69,14 +71,7 @@ class ParsiNegarApp {
   initMiscEventListeners() {
     // مدیریت دکمه تمام‌صفحه
     elements.fullscreenBtn.addEventListener('click', () => {
-      const isPreviewFullscreen = elements.editorContainer.style.display === 'none';
-      if (isPreviewFullscreen) {
-        elements.editorContainer.style.display = 'flex';
-        elements.previewContainer.classList.remove('fullscreen');
-      } else {
-        elements.editorContainer.style.display = 'none';
-        elements.previewContainer.classList.add('fullscreen');
-      }
+        elements.content.classList.toggle('preview-only');
     });
 
     // بستن منوهای باز با کلیک در بیرون آن‌ها
@@ -163,11 +158,11 @@ class ParsiNegarApp {
                     break;
                 case 'KeyF':
                     e.preventDefault();
-                    elements.showFilesCheckbox.click();
+                    EventBus.emit('sidePanel:toggle', 'files');
                     break;
                 case 'KeyT':
                     e.preventDefault();
-                    elements.showTocCheckbox.click();
+                    EventBus.emit('sidePanel:toggle', 'toc');
                     break;
                 case 'KeyK':
                     e.preventDefault();

@@ -1,9 +1,20 @@
 /* Content */
 #content {
   display: flex;
+  flex-direction: row-reverse; /* Put sidebar on the right */
   flex: 1;
   position: relative;
   overflow: hidden;
+}
+
+#mainContent {
+  flex: 1;
+  display: flex;
+  min-width: 0;
+}
+
+.sidebar-hidden #sideBar {
+  display: none;
 }
 
 #editorContainer, #previewContainer {
@@ -79,8 +90,11 @@
 }
 
 /* Preview-only mode (fullscreen preview) */
+#content.preview-only #mainContent {
+  flex-direction: column; /* Allow preview to take full width */
+}
 #content.preview-only #editorContainer,
-#content.preview-only #sidePanel {
+#content.preview-only #sideBar {
   display: none;
 }
 

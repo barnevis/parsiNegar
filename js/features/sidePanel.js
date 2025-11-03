@@ -7,47 +7,53 @@ import { customConfirm, customPrompt, customAlert } from './modal.js';
 import { Parser } from '../markdown/parser.js';
 
 /**
- * ماژول پنل کناری (فهرست مطالب و لیست پرونده‌ها)
+ * ماژول پنل کناری
+ * این ماژول فقط مسئولیت مدیریت پنل کناری (محتوا، باز/بسته شدن) را بر عهده دارد
+ * و از طریق رویدادها با سایر بخش‌ها ارتباط برقرار می‌کند.
  */
 let isSearchActive = false;
 
-// --- مدیریت تب‌ها و نمایش پنل ---
+// --- مدیریت پنل ---
 
-function updateSidePanelVisibility(options = {}) {
-    const showToc = elements.showTocCheckbox.checked;
-    const showFiles = elements.showFilesCheckbox.checked;
-    const show = showToc || showFiles;
+function openPanel(panelName) {
+    if (state.activePanel === panelName && !elements.sidePanel.classList.contains('is-closed')) return;
 
-    elements.sidePanel.style.display = show ? 'flex' : 'none';
+    state.isSidePanelOpen = true;
+    state.activePanel = panelName;
 
-    if (show) {
-        // اگر یکی از چک‌باکس‌ها فعال شد، تب مربوطه را فعال کن
-        if (options.tabToActivate) {
-             activateTab(options.tabToActivate);
-        } else {
-             // در غیر این صورت، اگر هیچ تبی فعال نیست، تب پرونده‌ها را به عنوان پیش‌فرض فعال کن
-            const isActive = elements.filesTabBtn.classList.contains('active') || elements.tocTabBtn.classList.contains('active');
-            if (!isActive) {
-                activateTab('files');
-            }
-        }
-    }
-}
-
-function activateTab(tabName) {
-    const isFiles = tabName === 'files';
-    elements.filesTabBtn.classList.toggle('active', isFiles);
-    elements.tocTabBtn.classList.toggle('active', !isFiles);
+    const isFiles = panelName === 'files';
+    elements.sidePanelTitle.textContent = isFiles ? 'پرونده‌ها' : 'فهرست مطالب';
     elements.filesPanel.classList.toggle('active', isFiles);
     elements.tocPanel.classList.toggle('active', !isFiles);
+
+    elements.sidePanel.classList.remove('is-closed');
+    EventBus.emit('sidePanel:opened', panelName);
+    EventBus.emit('settings:save');
 
     if (isFiles) {
         populateFilesList();
     } else {
         updateToc();
     }
-    // ذخیره تب فعال در تنظیمات
+}
+
+function closePanel() {
+    if (!state.isSidePanelOpen && elements.sidePanel.classList.contains('is-closed')) return;
+    
+    state.isSidePanelOpen = false;
+    state.activePanel = null;
+
+    elements.sidePanel.classList.add('is-closed');
+    EventBus.emit('sidePanel:closed');
     EventBus.emit('settings:save');
+}
+
+function togglePanel(panelName) {
+    if (state.activePanel === panelName && !elements.sidePanel.classList.contains('is-closed')) {
+        closePanel();
+    } else {
+        openPanel(panelName);
+    }
 }
 
 
@@ -123,7 +129,7 @@ function createTocHtml(structure, level = 0) {
 }
 
 function updateToc() {
-    if (!elements.showTocCheckbox.checked && !elements.tocTabBtn.classList.contains('active')) return;
+    if (state.activePanel !== 'toc') return;
 
     const headings = extractHeadings();
     const structure = buildTocStructure(headings);
@@ -197,7 +203,7 @@ async function populateFilesList(searchTerm = '') {
     
     if (filteredFiles.length === 0) {
         const message = searchTermLower ? 'پرونده‌ای یافت نشد.' : 'پرونده‌ای یافت نشد.';
-        elements.filesList.innerHTML = `<p style="text-align:center;opacity:0.7;">${message}</p>`;
+        elements.filesList.innerHTML = `<p class="empty-list-message">${message}</p>`;
         return;
     }
 
@@ -302,21 +308,25 @@ function handleSortChange(e) {
 // --- مقداردهی اولیه ---
 
 export function init() {
-    elements.filesTabBtn.addEventListener('click', () => activateTab('files'));
-    elements.tocTabBtn.addEventListener('click', () => activateTab('toc'));
-    
-    elements.newFileSideBtn.addEventListener('click', () => {
-        EventBus.emit('file:new');
+    // گوش دادن به رویدادها از ماژول‌های دیگر (مانند نوار فعالیت)
+    EventBus.on('sidePanel:toggle', togglePanel);
+    EventBus.on('sidePanel:close', closePanel);
+    EventBus.on('sidePanel:restore', (savedState) => {
+        if (savedState && savedState.isSidePanelOpen && savedState.activePanel) {
+            openPanel(savedState.activePanel);
+        } else {
+            closePanel();
+        }
     });
 
+    // رویدادهای مربوط به کنترل‌های داخلی پنل
+    elements.closeSidePanelBtn.addEventListener('click', closePanel);
+    elements.newFileSideBtn.addEventListener('click', () => EventBus.emit('file:new'));
     elements.fileSortToggle.addEventListener('click', (e) => {
         e.stopPropagation();
         elements.fileSortMenu.classList.toggle('hidden');
     });
-
     elements.fileSortMenu.addEventListener('click', handleSortChange);
-
-    // رویدادهای جست‌وجو
     elements.openFileSearchBtn.addEventListener('click', openSearch);
     elements.fileSearchInput.addEventListener('input', () => {
         const term = elements.fileSearchInput.value;
@@ -329,7 +339,6 @@ export function init() {
         elements.fileSearchInput.focus();
     });
 
-    // بستن جست‌وجو
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && isSearchActive) {
             e.preventDefault();
@@ -341,13 +350,17 @@ export function init() {
             closeSearch();
         }
     });
-
-
-    EventBus.on('settings:panelsVisibilityChanged', updateSidePanelVisibility);
-    EventBus.on('sidePanel:activateTab', activateTab);
+    
+    // رویدادهای مربوط به به‌روزرسانی محتوای پنل
     EventBus.on('toc:update', updateToc);
-    EventBus.on('file:listChanged', () => populateFilesList(elements.fileSearchInput.value));
-    EventBus.on('file:load', (file) => {
-        populateFilesList(elements.fileSearchInput.value);
+    EventBus.on('file:listChanged', () => {
+        if (state.activePanel === 'files') {
+            populateFilesList(elements.fileSearchInput.value);
+        }
+    });
+    EventBus.on('file:load', () => {
+        if (state.activePanel === 'files') {
+            populateFilesList(elements.fileSearchInput.value);
+        }
     });
 }

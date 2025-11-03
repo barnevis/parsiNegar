@@ -13,4 +13,8 @@ export const state = {
 
   // ایندکس میانبر انتخاب شده در منو
   selectedShortcutIndex: -1,
+
+  // وضعیت پنل کناری
+  isSidePanelOpen: true,
+  activePanel: null,
 };

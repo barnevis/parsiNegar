@@ -3,6 +3,7 @@ import { EventBus } from '../core/eventBus.js';
 import * as storage from '../utils/storage.js';
 import { customConfirm, customAlert } from './modal.js';
 import { setHljsTheme, configureMermaidTheme } from '../markdown/highlighter.js';
+import { state } from '../core/state.js';
 
 /**
  * ماژول مدیریت تنظیمات برنامه
@@ -23,10 +24,10 @@ function saveSettings() {
         fileSortOrder: fileSortOrder,
         showToolbar: elements.showToolbarCheckbox.checked,
         showStatusBar: elements.showStatusBarCheckbox.checked,
-        showToc: elements.showTocCheckbox.checked,
-        showFiles: elements.showFilesCheckbox.checked,
+        showSideBar: elements.showSideBarCheckbox.checked,
         showFilename: elements.showFilenameCheckbox.checked,
-        activeTab: elements.filesTabBtn.classList.contains('active') ? 'files' : 'toc',
+        isSidePanelOpen: state.isSidePanelOpen,
+        activePanel: state.activePanel,
     };
     localStorage.setItem('parsiNegarSettings', JSON.stringify(settings));
     return settings;
@@ -112,16 +113,17 @@ function loadSettings() {
     elements.showStatusBarCheckbox.checked = settings.showStatusBar ?? true;
     elements.statusBar.style.display = elements.showStatusBarCheckbox.checked ? 'flex' : 'none';
 
-    elements.showTocCheckbox.checked = settings.showToc ?? false;
-    elements.showFilesCheckbox.checked = settings.showFiles ?? false;
+    elements.showSideBarCheckbox.checked = settings.showSideBar ?? true;
+    elements.content.classList.toggle('sidebar-hidden', !elements.showSideBarCheckbox.checked);
     
     elements.showFilenameCheckbox.checked = settings.showFilename ?? true;
     elements.filename.style.display = elements.showFilenameCheckbox.checked ? 'block' : 'none';
 
-    EventBus.emit('settings:panelsVisibilityChanged');
-    if (settings.activeTab) {
-        EventBus.emit('sidePanel:activateTab', settings.activeTab);
-    }
+    // بازیابی وضعیت پنل کناری
+    EventBus.emit('sidePanel:restore', {
+        isSidePanelOpen: settings.isSidePanelOpen ?? true, // پیش‌فرض باز بودن
+        activePanel: settings.activePanel || null,
+    });
 }
 
 
@@ -140,16 +142,22 @@ async function clearAllData() {
     }
 }
 
+function openSettingsPanel() {
+    elements.settingsPanel.classList.remove('hidden');
+}
+
+function closeSettingsPanel() {
+    elements.settingsPanel.classList.add('hidden');
+}
 
 export function init() {
     // بارگذاری تنظیمات در ابتدای کار
     loadSettings();
 
-    // باز و بسته کردن پنل تنظیمات
-    elements.settingsBtn.addEventListener('click', () => elements.settingsPanel.classList.remove('hidden'));
-    elements.closeSettingsBtn.addEventListener('click', () => {
-        elements.settingsPanel.classList.add('hidden');
-    });
+    // باز و بسته کردن پنل تنظیمات از طریق رویدادها و کلیک مستقیم
+    elements.settingsBtn.addEventListener('click', openSettingsPanel);
+    EventBus.on('settings:open', openSettingsPanel);
+    elements.closeSettingsBtn.addEventListener('click', closeSettingsPanel);
     
     // رویدادهای مربوط به تغییر تنظیمات
     elements.themeRadios.forEach(radio => radio.addEventListener('change', (e) => {
@@ -212,12 +220,8 @@ export function init() {
         elements.filename.style.display = e.target.checked ? 'block' : 'none';
         saveSettings();
     });
-    elements.showTocCheckbox.addEventListener('change', () => {
-         EventBus.emit('settings:panelsVisibilityChanged', { tabToActivate: 'toc' });
-         saveSettings();
-    });
-    elements.showFilesCheckbox.addEventListener('change', () => {
-        EventBus.emit('settings:panelsVisibilityChanged', { tabToActivate: 'files' });
+    elements.showSideBarCheckbox.addEventListener('change', (e) => {
+        elements.content.classList.toggle('sidebar-hidden', !e.target.checked);
         saveSettings();
     });
 
