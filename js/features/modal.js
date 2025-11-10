@@ -1,4 +1,5 @@
 import { elements } from '../utils/dom.js';
+import { uiManager } from '../ui/uiManager.js';
 
 /**
  * ماژول مدیریت مودال‌ها و دیالوگ‌های سفارشی
@@ -9,7 +10,9 @@ import { elements } from '../utils/dom.js';
  * @param {object} options - تنظیمات دیالوگ
  * @returns {Promise<any>} - مقداری که با کلیک کاربر بازگردانده می‌شود
  */
-function showCustomDialog(options) {
+async function showCustomDialog(options) {
+  await uiManager.ensureComponentLoaded('customDialog');
+
   return new Promise((resolve) => {
     elements.dialogTitle.textContent = options.title || '';
     elements.dialogMessage.innerHTML = options.message || '';
@@ -52,6 +55,7 @@ function showCustomDialog(options) {
         }
     };
     
+    // Use onclick to overwrite previous listener, avoiding multiple resolves from stale closures
     elements.dialogCloseBtn.onclick = () => {
         const cancelValue = options.buttons.find(b => b.value === false || b.value === null)?.value;
         closeDialog();

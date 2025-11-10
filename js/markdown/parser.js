@@ -1,6 +1,6 @@
-import { elements } from '../utils/dom.js';
 import { slugifyHeading } from '../utils/helpers.js';
 import { highlightCode } from './highlighter.js';
+import { getSetting } from '../features/settings.js';
 
 /**
  * ماژول مفسر مارک‌داون
@@ -107,7 +107,7 @@ export const Parser = {
      * @returns {string} - رشته HTML
      */
     parse(markdown) {
-        const selectedParser = elements.markdownParserSelect.value;
+        const selectedParser = getSetting('markdownParser', 'parsneshan');
         try {
             if (selectedParser === 'shahneshan' && window.shahneshan) {
                 return window.shahneshan.markdownToOutput(markdown);
@@ -129,7 +129,7 @@ export const Parser = {
      * @returns {Array} - آرایه‌ای از توکن‌ها
      */
     getTokens(markdown) {
-        const selectedParser = elements.markdownParserSelect.value;
+        const selectedParser = getSetting('markdownParser', 'parsneshan');
         if (selectedParser === 'parsneshan' && parsneshanParser) {
             return parsneshanParser.parse(markdown, {});
         }
@@ -143,7 +143,7 @@ export const Parser = {
      * @returns {string} - رشته HTML پردازش شده
      */
     parseInline(text) {
-        const selectedParser = elements.markdownParserSelect.value;
+        const selectedParser = getSetting('markdownParser', 'parsneshan');
         try {
             if (selectedParser === 'parsneshan' && parsneshanParser) {
                 return parsneshanParser.renderInline(text);

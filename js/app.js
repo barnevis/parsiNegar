@@ -11,6 +11,7 @@ import { init as initActivityBar } from './features/activityBar.js';
 import { init as initStatusBar } from './features/statusBar.js';
 import { EventBus } from './core/eventBus.js';
 import { state } from './core/state.js';
+import { uiManager } from './ui/uiManager.js';
 
 /**
  * کلاس اصلی برنامه پارسی‌نگار
@@ -18,9 +19,14 @@ import { state } from './core/state.js';
  */
 class ParsiNegarApp {
   constructor() {
+    this.editor = null;
+  }
+
+  async init() {
+    await uiManager.ensureComponentLoaded('layout');
     this.editor = new Editor(elements.editor);
     this.initComponents();
-    this.loadInitialContent();
+    await this.loadInitialContent();
   }
 
   /**
@@ -77,13 +83,15 @@ class ParsiNegarApp {
     // بستن منوهای باز با کلیک در بیرون آن‌ها
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.file-actions-menu')) {
-            elements.filesList.querySelectorAll('.file-actions-dropdown:not(.hidden)').forEach(dropdown => {
+            elements.filesList?.querySelectorAll('.file-actions-dropdown:not(.hidden)').forEach(dropdown => {
                 dropdown.classList.add('hidden');
             });
         }
         if (!e.target.closest('#shortcutsMenu') && !e.target.closest('#editor')) {
-            elements.shortcutsMenu.style.display = 'none';
-            state.isShortcutMenuVisible = false;
+            if(elements.shortcutsMenu) {
+                elements.shortcutsMenu.style.display = 'none';
+                state.isShortcutMenuVisible = false;
+            }
         }
         if (!e.target.closest('.toolbar-dropdown-container')) {
             document.querySelectorAll('.toolbar-dropdown-menu:not(.hidden)').forEach(dropdown => {
@@ -91,7 +99,7 @@ class ParsiNegarApp {
             });
         }
         if (!e.target.closest('#fileSortContainer')) {
-            elements.fileSortMenu.classList.add('hidden');
+            elements.fileSortMenu?.classList.add('hidden');
         }
     });
 
@@ -116,12 +124,18 @@ class ParsiNegarApp {
     elements.preview.addEventListener('scroll', () => syncScroll(elements.preview, elements.editor));
 
     // مدیریت مودال راهنمای کلیدهای میانبر
-    elements.keyboardShortcutsBtn.addEventListener('click', (e) => {
+    let shortcutsModalInitialized = false;
+    elements.keyboardShortcutsBtn.addEventListener('click', async (e) => {
         e.preventDefault();
+        await uiManager.ensureComponentLoaded('shortcutsHelpModal');
         elements.shortcutsHelpModal.classList.remove('hidden');
-    });
-    elements.closeShortcutsHelpBtn.addEventListener('click', () => {
-        elements.shortcutsHelpModal.classList.add('hidden');
+
+        if (!shortcutsModalInitialized) {
+            elements.closeShortcutsHelpBtn.addEventListener('click', () => {
+                elements.shortcutsHelpModal.classList.add('hidden');
+            });
+            shortcutsModalInitialized = true;
+        }
     });
 
     // مدیریت کلیدهای میانبر عمومی
@@ -166,7 +180,7 @@ class ParsiNegarApp {
                     break;
                 case 'KeyK':
                     e.preventDefault();
-                    elements.shortcutsHelpModal.classList.remove('hidden');
+                    elements.keyboardShortcutsBtn.click();
                     break;
             }
         }
@@ -175,6 +189,7 @@ class ParsiNegarApp {
 }
 
 // شروع برنامه پس از بارگذاری کامل DOM
-document.addEventListener('DOMContentLoaded', () => {
-  new ParsiNegarApp();
+document.addEventListener('DOMContentLoaded', async () => {
+  const app = new ParsiNegarApp();
+  await app.init();
 });

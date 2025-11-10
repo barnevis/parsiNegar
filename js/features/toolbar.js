@@ -197,6 +197,7 @@ export function init(editor) {
         }
     });
 
-    const currentTheme = document.querySelector('input[name="theme"]:checked').value;
+    const savedSettings = JSON.parse(localStorage.getItem('parsiNegarSettings') || '{}');
+    const currentTheme = savedSettings.theme || 'device';
     applyThemeToPicker(currentTheme);
 }

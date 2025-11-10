@@ -1201,3 +1201,74 @@ fileManager.js:399:17
 
 ## پرامپت ۱۳۶
 با توجه به اضافه شدن نوار فعالیت ازت می‌خوام سندهای پروژه را بروزرسانی کنی.
+
+## پرامپت ۱۳۷
+حجم فایل `index.html` افزایش پیدا کرده، ازت می‌خوام فایل را بررسی کنی و مثل سایر بخش‌ها پروژه آن را ماژولار کنی.
+- دقت کن هر بخش یک کار را انجام بده.
+- می‌خوام با این کار توسعه‌پذیری و نگهداری پروژه راحت‌تر بشه.
+- فایل‌ها را در پوشه‌های مناسب سازمان‌دهی کن.
+- بخش‌های اصلی صفحه (مثل منو و نوار ابزار) باید از همان ابتدا بارگذاری بشن
+- مودال‌ها و پنجره‌هایی که کاربر فقط گاهی باز می‌کنه، می‌تونن بعداً و فقط در صورت نیاز بارگذاری بشن.
+- همه چیز باید دقیقاً مثل قبل کار کنه
+- event listener ها و منطق‌های موجود نباید خراب بشن
+- هیچ تغییری در رفتار برنامه نباید ایجاد بشه
+- از همان الگوهایی که در پروژه استفاده کردیم پیروی کن (ES6 Modules, Class-based)
+- با فایل‌های موجود در `js/features/` و `js/core/` سازگار باشه
+- نام‌گذاری‌ها و ساختار فولدر مشابه بقیه پروژه باشه
+- کد باید ساده و قابل فهم باشه
+- ساختار باید منظم و مرتب باشه
+
+## پرامپت ۱۳۸
+اینکه در پوشه ui دو فایل ایجاد کردی به نظرم خوب نیست. در آینده پروژه بزرگ‌تر بشه دوباره این فایل‌ها هم حجم‌شون زیاد میشه.
+
+## پرامپت ۱۳۹
+در کنسول مرورگر خطای زیر نمایش داده می‌شه:
+
+```js
+GET
+http://127.0.0.1:8000/js/ui/modals.js
+NS_ERROR_CORRUPTED_CONTENT
+
+Loading module from “http://127.0.0.1:8000/js/ui/modals.js” was blocked because of a disallowed MIME type (“text/html”).
+```
+
+اگر فایلی اضافی هست پاکش کن.
+
+## پرامپت ۱۴۰
+در کنسول خطای زیر نمایش داده می‌شه:
+
+```js
+Uncaught (in promise) TypeError: can't access property "value", document.querySelector(...) is null
+    init http://127.0.0.1:8000/js/features/toolbar.js:200
+    initComponents http://127.0.0.1:8000/js/app.js:42
+    init http://127.0.0.1:8000/js/app.js:28
+    async* http://127.0.0.1:8000/js/app.js:194
+    EventListener.handleEvent* http://127.0.0.1:8000/js/app.js:192
+toolbar.js:200:35
+```
+
+## پرامپت ۱۴۱
+حالا خطای زیر نمایش داده می‌شه:
+
+```js
+Uncaught (in promise) TypeError: can't access property "value", (intermediate value).markdownParserSelect is null
+    parse http://127.0.0.1:8000/js/markdown/parser.js:110
+    updatePreview http://127.0.0.1:8000/js/features/preview.js:357
+    emit http://127.0.0.1:8000/js/core/eventBus.js:28
+    emit http://127.0.0.1:8000/js/core/eventBus.js:26
+    setValue http://127.0.0.1:8000/js/core/editor.js:427
+    loadInitialContent http://127.0.0.1:8000/js/app.js:61
+    init http://127.0.0.1:8000/js/app.js:29
+    async* http://127.0.0.1:8000/js/app.js:194
+    EventListener.handleEvent* http://127.0.0.1:8000/js/app.js:192
+parser.js:110:32
+Uncaught (in promise) TypeError: can't access property "value", (intermediate value).markdownParserSelect is null
+    parse http://127.0.0.1:8000/js/markdown/parser.js:110
+    updatePreview http://127.0.0.1:8000/js/features/preview.js:357
+    emit http://127.0.0.1:8000/js/core/eventBus.js:28
+    emit http://127.0.0.1:8000/js/core/eventBus.js:26
+    loadInitialContent http://127.0.0.1:8000/js/app.js:71
+    init http://127.0.0.1:8000/js/app.js:29
+    async* http://127.0.0.1:8000/js/app.js:194
+    EventListener.handleEvent* http://127.0.0.1:8000/js/app.js:192
+```

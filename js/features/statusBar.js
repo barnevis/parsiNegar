@@ -1,10 +1,13 @@
 import { elements } from '../utils/dom.js';
 import { EventBus } from '../core/eventBus.js';
 import { formatFileSize, removeFileExtension } from '../utils/helpers.js';
+import { uiManager } from '../ui/uiManager.js';
 
 /**
  * ماژول نوار وضعیت (آمار متن)
  */
+
+let propertiesModalInitialized = false;
 
 /**
  * به‌روزرسانی آمار نمایش داده شده در نوار وضعیت
@@ -28,7 +31,9 @@ function updateStats(content) {
  * نمایش اطلاعات یک پرونده خاص در مودال ویژگی‌ها
  * @param {object} file - آبجکت پرونده از IndexedDB
  */
-function showFileProperties(file) {
+async function showFileProperties(file) {
+    await uiManager.ensureComponentLoaded('propertiesModal');
+
     const content = file.content || '';
     const stats = {
         chars: content.length,
@@ -46,6 +51,13 @@ function showFileProperties(file) {
     elements.propLinesCount.textContent = stats.lines.toLocaleString('fa-IR');
 
     elements.filePropertiesModal.classList.remove('hidden');
+
+    if (!propertiesModalInitialized) {
+        elements.closePropertiesBtn.addEventListener('click', () => {
+            elements.filePropertiesModal.classList.add('hidden');
+        });
+        propertiesModalInitialized = true;
+    }
 }
 
 
@@ -59,7 +71,4 @@ export function init() {
 
     // مدیریت مودال ویژگی‌های پرونده
     EventBus.on('file:showProperties', showFileProperties);
-    elements.closePropertiesBtn.addEventListener('click', () => {
-        elements.filePropertiesModal.classList.add('hidden');
-    });
 }
