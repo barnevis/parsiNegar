@@ -12,6 +12,7 @@ import { init as initStatusBar } from './features/statusBar.js';
 import { EventBus } from './core/eventBus.js';
 import { state } from './core/state.js';
 import { uiManager } from './ui/uiManager.js';
+import { html as layoutHTML } from './ui/components/layout.js';
 
 /**
  * کلاس اصلی برنامه پارسی‌نگار
@@ -23,16 +24,19 @@ class ParsiNegarApp {
   }
 
   async init() {
-    // ابتدا شل اصلی برنامه را بارگذاری می‌کنیم
-    await uiManager.ensureComponentLoaded('layout');
+    // ابتدا شل اصلی برنامه را به صورت مستقیم ایجاد می‌کنیم
+    elements.appContainer.innerHTML = layoutHTML;
     
-    // سپس تمام کامپوننت‌های اصلی UI را به صورت همزمان در شل بارگذاری می‌کنیم
-    await Promise.all([
-        uiManager.ensureComponentLoaded('menuBar'),
-        uiManager.ensureComponentLoaded('toolbar'),
-        uiManager.ensureComponentLoaded('mainContent'),
-        uiManager.ensureComponentLoaded('statusBar'),
-    ]);
+    // اجازه بده DOM کاملاً آماده شود
+    await new Promise(resolve => requestAnimationFrame(() => {
+      requestAnimationFrame(resolve);
+    }));
+    
+    // سپس تمام کامپوننت‌های اصلی UI را به صورت متوالی بارگذاری می‌کنیم
+    await uiManager.ensureComponentLoaded('menuBar');
+    await uiManager.ensureComponentLoaded('toolbar');
+    await uiManager.ensureComponentLoaded('mainContent');
+    await uiManager.ensureComponentLoaded('statusBar');
     
     this.editor = new Editor(elements.editor);
     this.initComponents();

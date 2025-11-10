@@ -6,12 +6,6 @@ import { elements } from '../utils/dom.js';
  */
 
 const componentRegistry = {
-  layout: {
-    loader: () => import('./components/layout.js'),
-    target: () => elements.appContainer,
-    isLoaded: () => !!elements.menuBar,
-    position: 'beforeend'
-  },
   menuBar: {
     loader: () => import('./components/menuBar.js'),
     target: () => elements.menuBar,
@@ -93,6 +87,7 @@ class UIManager {
         // دوباره چک کن که در این فاصله اضافه نشده باشد
         if (!component.isLoaded()) {
           targetElement.insertAdjacentHTML(component.position, module.html);
+          void targetElement.offsetHeight; // Force reflow
         }
       } else {
         console.error(`عنصر هدف برای کامپوننت '${name}' یافت نشد.`);

@@ -1280,3 +1280,68 @@ Uncaught (in promise) TypeError: can't access property "value", (intermediate va
 
 ## پرامپت ۱۴۳
 ازت می‌خوام برای نگهداری و توسعه‌پذیری بهتر فایل `js/ui/components/layout.js` را هم به فایل‌های کوچکتر تقسیم کنی. دقت کن هر فایل فقط یک کار انجام بده.
+
+## پرامپت ۱۴۴
+در کنسول خطای زیر نمایش داده می‌شه:
+
+```js
+عنصر هدف برای کامپوننت 'menuBar' یافت نشد. uiManager.js:98:17
+Uncaught (in promise) TypeError: can't access property "value", (intermediate value).searchScope is null
+    applyGlobalSettings http://127.0.0.1:8000/js/features/settings.js:103
+    init http://127.0.0.1:8000/js/features/settings.js:219
+    initComponents http://127.0.0.1:8000/js/app.js:48
+    init http://127.0.0.1:8000/js/app.js:38
+    async* http://127.0.0.1:8000/js/app.js:204
+    EventListener.handleEvent* http://127.0.0.1:8000/js/app.js:202
+```
+
+## پرامپت ۱۴۵
+باز هم خطا نمایش داده می‌شه:
+
+```js
+عنصر هدف برای کامپوننت 'menuBar' یافت نشد. uiManager.js:98:17
+Uncaught (in promise) TypeError: can't access property "value", (intermediate value).searchScope is null
+    applyGlobalSettings http://127.0.0.1:8000/js/features/settings.js:103
+    init http://127.0.0.1:8000/js/features/settings.js:219
+    initComponents http://127.0.0.1:8000/js/app.js:46
+    init http://127.0.0.1:8000/js/app.js:36
+    async* http://127.0.0.1:8000/js/app.js:202
+    EventListener.handleEvent* http://127.0.0.1:8000/js/app.js:200
+```
+
+## پرامپت ۱۴۶
+حالا این خطا نمایش داده می‌شه:
+
+```js
+عنصر هدف برای کامپوننت 'menuBar' یافت نشد. uiManager.js:92:17
+Uncaught (in promise) TypeError: can't access property "value", (intermediate value).searchScope is null
+    applyGlobalSettings http://127.0.0.1:8000/js/features/settings.js:103
+    init http://127.0.0.1:8000/js/features/settings.js:219
+    initComponents http://127.0.0.1:8000/js/app.js:47
+    init http://127.0.0.1:8000/js/app.js:37
+```
+
+## پرامپت ۱۴۷
+
+خطای زیر در کنسول مرورگر دریافت می‌کنم:
+
+"عنصر هدف برای کامپوننت 'menuBar' یافت نشد"
+
+مشکل این است که بعد از inject کردن HTML با `insertAdjacentHTML`، DOM به صورت asynchronous آپدیت می‌شود و `querySelector` نمی‌تواند element های تازه اضافه شده را پیدا کند.
+
+لطفاً این تغییرات را انجام بده:
+
+1. در فایل `js/ui/uiManager.js`، بعد از خط `insertAdjacentHTML`، این خط را اضافه کن:
+```javascript
+void targetElement.offsetHeight; // Force reflow
+```
+
+2. در فایل `js/app.js`، بعد از `await uiManager.ensureComponentLoaded('layout');`، این کد را اضافه کن:
+```javascript
+// اجازه بده DOM کاملاً آماده شود
+await new Promise(resolve => requestAnimationFrame(() => {
+  requestAnimationFrame(resolve);
+}));
+```
+
+> مشکل را با استفاده از مدل sonnet بر طرف کردم.
