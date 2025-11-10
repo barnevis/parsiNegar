@@ -91,7 +91,7 @@ export const html = `
             <a href="https://github.com/alirho/parsiNegar" target="_blank" class="github-link" title="گیت‌هاب">
               <i class="fab fa-github"></i>
             </a>
-            <a href="https://github.com/alirho/parsiNegar/releases" target="_blank" class="version-link">نسخه ۲.۱۷.۰</a>
+            <a href="https://github.com/alirho/parsiNegar/releases" target="_blank" class="version-link">نسخه ۲.۱۸.۰</a>
           </div>
         </div>
       </div>
