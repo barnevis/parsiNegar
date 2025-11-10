@@ -39,6 +39,10 @@ const componentRegistry = {
 };
 
 class UIManager {
+  constructor() {
+    this.loadingPromises = new Map();
+  }
+
   async ensureComponentLoaded(name) {
     const component = componentRegistry[name];
     
@@ -47,16 +51,33 @@ class UIManager {
       return;
     }
 
+    // اگر بارگذاری در حال انجام بود، منتظر آن بمان
+    if (this.loadingPromises.has(name)) {
+      await this.loadingPromises.get(name);
+      return;
+    }
+
     try {
-      const module = await component.loader();
+      // بارگذاری را شروع کن و پرامیس آن را ذخیره کن
+      const loadPromise = component.loader();
+      this.loadingPromises.set(name, loadPromise);
+
+      const module = await loadPromise;
       const targetElement = component.target();
+      
       if (targetElement) {
-        targetElement.insertAdjacentHTML(component.position, module.html);
+        // دوباره چک کن که در این فاصله اضافه نشده باشد
+        if (!component.isLoaded()) {
+          targetElement.insertAdjacentHTML(component.position, module.html);
+        }
       } else {
         console.error(`عنصر هدف برای کامپوننت '${name}' یافت نشد.`);
       }
     } catch (error) {
       console.error(`خطا در بارگذاری کامپوننت '${name}':`, error);
+    } finally {
+      // پس از اتمام (موفق یا ناموفق)، پرامیس را از کش حذف کن
+      this.loadingPromises.delete(name);
     }
   }
 }

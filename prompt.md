@@ -1272,3 +1272,8 @@ Uncaught (in promise) TypeError: can't access property "value", (intermediate va
     async* http://127.0.0.1:8000/js/app.js:194
     EventListener.handleEvent* http://127.0.0.1:8000/js/app.js:192
 ```
+
+## پرامپت ۱۴۲
+مشکل‌ها زیر را بر طرف کن:
+1. مشکل امنیتی در فایل `js/features/modal.js`: در تابع `showCustomDialog`، از `innerHTML` برای نمایش پیام استفاده شده، این مشکل امنیتی دارد چون اگر متن پیام شامل کد HTML باشد، اجرا می‌شود. تغییر `innerHTML` به `textContent` در این خط. اگر واقعاً نیاز به نمایش HTML فرمت‌بندی شده در پیام‌ها داری، باید یک تابع sanitization بنویسی که HTML را ایمن کند.
+2.  مشکل Race Condition در `js/ui/uiManager.js`: اگر کاربر دو بار سریع روی یک دکمه کلیک کند (مثلاً دکمه تنظیمات)، ممکنه یک کامپوننت دو بار بارگذاری و به صفحه اضافه بشه. این به این دلیل است که بررسی `component.isLoaded()` قبل از `await` انجام می‌شه، اما قبل از اینکه اولین فراخوانی کامل بشه، فراخوانی دوم هم همان بررسی را می‌کنه. باید یک سیستم caching برای promise های در حال بارگذاری اضافه کنی.

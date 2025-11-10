@@ -119,3 +119,56 @@ export function getCursorCoordinates(editor) {
 
     return { top, left, lineHeight };
 }
+
+/**
+ * یک رشته HTML را برای جلوگیری از حملات XSS پاک‌سازی می‌کند.
+ * به زیرمجموعه‌ای از تگ‌های امن اجازه می‌دهد و تمام اتریبیوت‌ها را حذف می‌کند.
+ * @param {string} str - رشته HTML برای پاک‌سازی.
+ * @returns {string} - رشته HTML پاک‌سازی شده.
+ */
+export function sanitizeHTML(str) {
+    const temp = document.createElement('div');
+    temp.innerHTML = str;
+
+    const safeTags = ['B', 'I', 'U', 'EM', 'STRONG', 'CODE', 'P', 'BR', 'SPAN'];
+
+    const sanitizeNode = (node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            return node;
+        }
+
+        if (node.nodeType !== Node.ELEMENT_NODE || !safeTags.includes(node.tagName)) {
+            // جایگزینی تگ‌های ناامن با محتوای متنی آن‌ها
+            const fragment = document.createDocumentFragment();
+            while (node.firstChild) {
+                fragment.appendChild(sanitizeNode(node.firstChild));
+            }
+            return fragment;
+        }
+        
+        // حذف تمام اتریبیوت‌ها از تگ‌های امن
+        while(node.attributes.length > 0) {
+            node.removeAttribute(node.attributes[0].name);
+        }
+
+        // پاک‌سازی بازگشتی نودهای فرزند
+        for (let i = 0; i < node.childNodes.length; i++) {
+            const sanitizedChild = sanitizeNode(node.childNodes[i]);
+            if (sanitizedChild !== node.childNodes[i]) {
+                node.replaceChild(sanitizedChild, node.childNodes[i]);
+            }
+        }
+        
+        return node;
+    };
+
+    const fragment = document.createDocumentFragment();
+    while (temp.firstChild) {
+        fragment.appendChild(sanitizeNode(temp.firstChild));
+    }
+    
+    const container = document.createElement('div');
+    container.appendChild(fragment);
+
+    return container.innerHTML;
+}

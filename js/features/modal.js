@@ -1,5 +1,6 @@
 import { elements } from '../utils/dom.js';
 import { uiManager } from '../ui/uiManager.js';
+import { sanitizeHTML } from '../utils/helpers.js';
 
 /**
  * ماژول مدیریت مودال‌ها و دیالوگ‌های سفارشی
@@ -15,7 +16,7 @@ async function showCustomDialog(options) {
 
   return new Promise((resolve) => {
     elements.dialogTitle.textContent = options.title || '';
-    elements.dialogMessage.innerHTML = options.message || '';
+    elements.dialogMessage.innerHTML = sanitizeHTML(options.message || '');
 
     if (options.type === 'prompt') {
       elements.dialogInput.classList.remove('hidden');
