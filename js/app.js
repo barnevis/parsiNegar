@@ -23,7 +23,17 @@ class ParsiNegarApp {
   }
 
   async init() {
+    // ابتدا شل اصلی برنامه را بارگذاری می‌کنیم
     await uiManager.ensureComponentLoaded('layout');
+    
+    // سپس تمام کامپوننت‌های اصلی UI را به صورت همزمان در شل بارگذاری می‌کنیم
+    await Promise.all([
+        uiManager.ensureComponentLoaded('menuBar'),
+        uiManager.ensureComponentLoaded('toolbar'),
+        uiManager.ensureComponentLoaded('mainContent'),
+        uiManager.ensureComponentLoaded('statusBar'),
+    ]);
+    
     this.editor = new Editor(elements.editor);
     this.initComponents();
     await this.loadInitialContent();

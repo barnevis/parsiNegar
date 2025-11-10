@@ -12,6 +12,30 @@ const componentRegistry = {
     isLoaded: () => !!elements.menuBar,
     position: 'beforeend'
   },
+  menuBar: {
+    loader: () => import('./components/menuBar.js'),
+    target: () => elements.menuBar,
+    isLoaded: () => elements.menuBar && elements.menuBar.hasChildNodes(),
+    position: 'beforeend'
+  },
+  toolbar: {
+    loader: () => import('./components/toolbar.js'),
+    target: () => elements.toolbar,
+    isLoaded: () => elements.toolbar && elements.toolbar.hasChildNodes(),
+    position: 'beforeend'
+  },
+  mainContent: {
+    loader: () => import('./components/mainContent.js'),
+    target: () => elements.content,
+    isLoaded: () => elements.content && elements.content.hasChildNodes(),
+    position: 'beforeend'
+  },
+  statusBar: {
+    loader: () => import('./components/statusBar.js'),
+    target: () => elements.statusBar,
+    isLoaded: () => elements.statusBar && elements.statusBar.hasChildNodes(),
+    position: 'beforeend'
+  },
   settingsModal: {
     loader: () => import('./components/settingsModal.js'),
     target: () => document.body,
