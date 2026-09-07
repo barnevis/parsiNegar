@@ -1,0 +1,23 @@
+// Default Persian sample document shown on first launch (version 1).
+// Static starter content only; future file management will replace it.
+const SAMPLE_DOCUMENT = `# پارسی‌نگار
+
+به پارسی‌نگار خوش آمدید؛ اینجا بنویسید و متن *مارک‌داون* خود را ویرایش کنید.
+
+## امکانات نسخهٔ نخست
+
+- نوشتن و ویرایش متن با **راست‌به‌چپ** کامل
+- پشتیبانی از *نشانه‌گذاری* فارسی
+- قلم **وزیرمتن** به‌صورت محلی
+
+> این یک نمونه نقل‌قول است تا جلوهٔ متن را ببینید.
+
+\`\`\`متن
+نمونهٔ بلوک کد
+\`\`\`
+
+۱. مورد نخست فهرست شماره‌دار
+۲. مورد دوم فهرست شماره‌دار
+`;
+
+export default SAMPLE_DOCUMENT;

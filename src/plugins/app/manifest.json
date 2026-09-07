@@ -1,0 +1,14 @@
+{
+  "name": "parsinegar.app",
+  "version": "0.1.0",
+  "architecture": "0.11",
+  "description": "Parsinegar application plugin: owns the route catalog of version 1",
+  "type": "product",
+  "dependencies": {
+    "required": ["pey.router.service"],
+    "optional": []
+  },
+  "provides": [],
+  "events": [],
+  "config": {}
+}

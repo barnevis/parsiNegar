@@ -1,0 +1,11 @@
+/* Document-level base styles (light DOM only; components style themselves). */
+html {
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-block-size: 100vh;
+  color: #1a1a1a;
+  background-color: #fafafa;
+}

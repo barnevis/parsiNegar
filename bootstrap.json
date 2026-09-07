@@ -1,0 +1,42 @@
+{
+  "architecture": "0.11",
+  "core": {
+    "name": "pey.core",
+    "version": "0.2.2"
+  },
+  "adapters": {
+    "router": "BrowserHistoryAdapter"
+  },
+  "ui": {
+    "path": "./src/ui"
+  },
+  "plugins": [
+    {
+      "name": "pey.router",
+      "version": "1.0.0",
+      "path": "./node_modules/pey.router"
+    },
+    {
+      "name": "parsinegar.app",
+      "version": "0.1.0",
+      "path": "./src/plugins/app"
+    }
+  ],
+  "config": {
+    "pey.router": {
+      "basePath": "/",
+      "notFoundPath": "/not-found"
+    },
+    "ui": {
+      "theme": "system",
+      "language": "fa",
+      "direction": "rtl",
+      "fallbackPath": "/",
+      "assetBaseUrl": "./assets"
+    }
+  },
+  "app": {
+    "name": "parsinegar",
+    "version": "0.1.0"
+  }
+}
