@@ -1,9 +1,14 @@
 # پارسی‌نگار (Parsinegar)
 
+[![AI](https://img.shields.io/badge/Built%20with-AI-blueviolet)](#)
+[![license](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Bonyan Architecture](https://img.shields.io/badge/bonyan-0.11-56c3bf)](https://github.com/barnevis/bonyan)
+
 ویرایشگر فارسی Markdown بر پایهٔ معماری Pey — سند معماری: `docs/architecture.md`.
 
-نسخهٔ نخست (`0.1.0`) فقط یک صفحهٔ ساده با یک محیط نوشتن Markdown است
-(CodeMirror درون لایهٔ UI). بدون نوار ابزار، پیش‌نمایش، تنظیمات و مدیریت فایل.
+نسخهٔ نخست (`0.1.0`) فقط یک صفحهٔ ساده با یک محیط نوشتن Markdown است (CodeMirror درون لایهٔ UI). بدون نوار ابزار، پیش‌نمایش، تنظیمات و مدیریت فایل.
+
+تاریخچهٔ تغییرات: `CHANGELOG.md`.
 
 ## ساختار
 
@@ -18,8 +23,7 @@ parsinegar/
 └── index.html        # لودر Host + importmap (بدون ابزار ساخت)
 ```
 
-Pey و افزونه‌های آن (`@pey/core` ،`pey.router` ،`pey.webui`) وابستگی‌اند و
-سورس آن‌ها در این مخزن قرار نمی‌گیرد — مستقیم از GitHub نصب می‌شوند.
+Pey و افزونه‌های آن (`@pey/core` ،`pey.router` ،`pey.webui`) وابستگی‌اند و سورس آن‌ها در این مخزن قرار نمی‌گیرد — مستقیم از GitHub نصب می‌شوند.
 
 ## اجرا
 
@@ -28,9 +32,7 @@ npm install
 npm start     # static server روی ریشهٔ پروژه، سپس باز کردن آدرس اعلام‌شده
 ```
 
-نکته: سرور باید ریشهٔ پروژه را سرو کند تا `node_modules/` (برای importmap) و
-`bootstrap.json` در دسترس باشند. `npm start` از `--single` استفاده می‌کند تا
-مسیرهای SPA مثل `/not-found` هم به `index.html` برگردند.
+نکته: سرور باید ریشهٔ پروژه را سرو کند تا `node_modules/` (برای importmap) و `bootstrap.json` در دسترس باشند. `npm start` از `--single` استفاده می‌کند تا مسیرهای SPA مثل `/not-found` هم به `index.html` برگردند.
 
 ## آزمون
 
