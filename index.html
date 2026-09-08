@@ -7,6 +7,10 @@
   <link rel="icon" href="data:," />
   <link rel="stylesheet" href="./public/fonts/vazirmatn.css" />
   <link rel="stylesheet" href="./public/base.css" />
+  <!-- importmap: every entry is a direct dependency in package.json. The
+    CodeMirror entries beyond 'codemirror' and '@codemirror/lang-markdown'
+    are its static import closure (verified, not speculative): browsers have
+    no node_modules lookup, so each must be mapped explicitly. -->
   <script type="importmap">
     {
       "imports": {

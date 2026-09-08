@@ -2,6 +2,12 @@
 
 تمام تغییرات قابل‌توجه این پروژه در این فایل ثبت می‌شود.
 
+## [Unreleased] (مقصد: 0.2.0)
+
+### بهبود یافته
+
+- بستار import استاتیک CodeMirror (`@codemirror/*` ،`@lezer/*` و وابسته‌ها) از نصب transitive به وابستگی مستقیم `package.json` ارتقا یافت؛ همه در importmap نگاشت شده‌اند.
+
 ## [0.1.0] — 1405-06-16
 
 
@@ -22,4 +28,5 @@
 - `@pey/core` از `peyjs/pey-core` (تگ `v0.2.2`)
 - `pey.router` از `peyjs/pey-router` (تگ `v1.0.0`)
 - `pey.webui` از `peyjs/pey-webui` (تگ `v1.0.0`)
-- CodeMirror 6 و `@codemirror/lang-markdown` از npm
+- CodeMirror 6 و `@codemirror/lang-markdown` از npm (بستار import در
+  importmap نگاشت شده بود)

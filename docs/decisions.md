@@ -11,7 +11,7 @@
 ۳. **میزبانی CodeMirror در صفحهٔ خانه، نه کامپوننت تودرتو:** یک فرزند `PeyElement` را نمی‌توان به‌صورت declarative تودرتو کرد (الزام
    connect-before-insertion در برابر قانون «بدون mutation بیرون از render»). پس صفحهٔ `parsi-page-home` گرهٔ میزبان را در تمپلیت خود رندر می‌کند و ویو را از طریق کارخانهٔ سادهٔ `components/editor/markdown-view.js` می‌سازد. این کارخانه المنت نیست و سرویسی مصرف نمی‌کند.
 
-۴. **بدون ابزار ساخت:** فقط ESM بومی + importmap در `index.html`. نگاشت‌های CodeMirror باید بستهٔ transitive واقعی (`@lezer/*` ،`@codemirror/*` ،`style-mod` ،`w3c-keyname` ،`crelt` ،`@marijn/find-cluster-break`) را پوشش دهند؛ پس از هر ارتقای CodeMirror پوشش را بازبینی کنید.
+۴. **بدون ابزار ساخت:** فقط ESM بومی + importmap در `index.html`. مرورگر lookup روی `node_modules` ندارد، پس هر عضو بستار import استاتیک CodeMirror باید صریحاً نگاشت شود؛ همهٔ آن‌ها وابستگی مستقیم `package.json` هستند (transitive نگه داشته نمی‌شود). پس از هر ارتقای CodeMirror بستار را دوباره استخراج و هر دو فایل را به‌روز کنید.
 
 ## گام‌های بعدی (خارج از نسخهٔ ۱)
 
