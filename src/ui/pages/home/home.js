@@ -21,6 +21,16 @@ class ParsiPageHome extends PeyElement {
     }
   }
 
+  eventTypes() {
+    return ['click'];
+  }
+
+  handleEvent(event) {
+    if (event.target?.closest?.('[part="editor-host"]')) {
+      this.#editor?.focus();
+    }
+  }
+
   connectedCallback() {
     super.connectedCallback();
     // The base class flushes render() in a microtask queued inside
@@ -68,13 +78,16 @@ class ParsiPageHome extends PeyElement {
           opacity: 0.75;
         }
         [part="editor-host"] {
-          border: 1px solid var(--pey-color-border, #c8c8c8);
-          border-radius: 8px;
           overflow: hidden;
-          background-color: var(--pey-color-canvas, #ffffff);
+          background-color: #ffffff;
+          border: 1px solid #e2e2e8;
+          border-radius: 12px;
+          box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px rgb(0 0 0 / 0.07);
+          padding: 2rem 2.25rem;
+          cursor: text;
         }
         [part="editor-host"] .cm-editor {
-          min-block-size: 60vh;
+          min-block-size: 65vh;
         }
       </style>
       <h1 part="title">${this.#t('parsinegar.app.title')}</h1>

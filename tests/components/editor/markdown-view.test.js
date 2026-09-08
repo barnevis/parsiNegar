@@ -62,6 +62,26 @@ test('should_ignore_non_string_when_set_document_receives_invalid_input', () => 
   }
 });
 
+test('should_focus_editor_when_focus_is_called', () => {
+  const host = document.createElement('div');
+  document.body.append(host);
+  const editor = createMarkdownView(host, { document: 'before' });
+  try {
+    editor.focus();
+    assert.ok(host.contains(document.activeElement), 'expected focus inside the editor');
+  } finally {
+    editor.destroy();
+    host.remove();
+  }
+});
+
+test('should_ignore_focus_when_destroyed', () => {
+  const host = document.createElement('div');
+  const editor = createMarkdownView(host, { document: 'before' });
+  editor.destroy();
+  assert.doesNotThrow(() => editor.focus());
+});
+
 test('should_fail_clearly_when_host_is_not_an_element', () => {
   assert.throws(() => createMarkdownView(null), /element host/);
 });

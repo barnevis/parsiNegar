@@ -7,6 +7,7 @@
 // listeners until destroy() releases them.
 import { EditorView, minimalSetup } from 'codemirror';
 import { markdown } from '@codemirror/lang-markdown';
+import { livePreviewExtensions } from './live-preview.js';
 
 const PERSIAN_FONT = "'Vazirmatn', Tahoma, sans-serif";
 
@@ -17,7 +18,8 @@ const PERSIAN_FONT = "'Vazirmatn', Tahoma, sans-serif";
  * @param {string} [options.document] Initial Markdown text.
  * @param {string} [options.label] Accessible label for the editor.
  * @param {Function} [options.onChange] Called with the new text on every edit.
- * @returns {object} Controller with getValue(), setDocument(text), destroy().
+ * @returns {object} Controller with getValue(), setDocument(text),
+ *   focus(), destroy().
  * @throws {Error} When host is not an element.
  */
 export function createMarkdownView(host, options = {}) {
@@ -36,6 +38,7 @@ export function createMarkdownView(host, options = {}) {
       minimalSetup,
       markdown(),
       EditorView.lineWrapping,
+      ...livePreviewExtensions(),
       EditorView.editorAttributes.of({ dir: 'rtl', 'aria-label': options.label ?? '' }),
       EditorView.theme({
         '&': {
@@ -82,6 +85,15 @@ export function createMarkdownView(host, options = {}) {
       view.dispatch({
         changes: { from: 0, to: view.state.doc.length, insert: text },
       });
+    },
+    /**
+     * Moves keyboard focus into the editor. No-op after destroy.
+     * @returns {void}
+     */
+    focus() {
+      if (!destroyed) {
+        view.focus();
+      }
     },
     /**
      * Destroys the view and releases its listeners. Keeps the last text.

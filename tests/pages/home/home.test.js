@@ -35,6 +35,22 @@ test('should_render_title_and_editor_when_mounted', async () => {
   }
 });
 
+test('should_focus_editor_when_card_is_clicked', async () => {
+  const element = document.createElement(TAG);
+  element.connect({ infrastructure: { events: createEvents() }, refs: { t: translate } });
+  document.body.append(element);
+  await flush();
+  try {
+    element.shadowRoot.querySelector('[part="editor-host"]').click();
+    await flush();
+    const inner = element.shadowRoot.activeElement;
+    assert.ok(inner, 'expected focus inside the editor');
+    assert.ok(element.shadowRoot.querySelector('.cm-editor').contains(inner));
+  } finally {
+    element.remove();
+  }
+});
+
 test('should_emit_change_when_editor_content_changes', async () => {
   const element = document.createElement(TAG);
   element.connect({ infrastructure: { events: createEvents() }, refs: { t: translate } });
