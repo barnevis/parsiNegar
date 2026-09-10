@@ -45,6 +45,10 @@ const persianHighlight = HighlightStyle.define([
  * active line so the text under the cursor stays editable in the open.
  */
 const livePreviewTheme = EditorView.theme({
+  // The base theme draws a dotted outline around the focused editor; on the
+  // paper card it looks like a glitch, and the blinking caret already signals
+  // focus — so it is explicitly removed.
+  '&.cm-focused': { outline: 'none' },
   '& .parsi-mark': { display: 'none' },
   '& .parsi-url': { display: 'none' },
   '& .parsi-label': { display: 'none' },

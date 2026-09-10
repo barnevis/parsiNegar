@@ -43,6 +43,15 @@ function hasRule(selector, property, expected) {
   return false;
 }
 
+test('should_remove_focus_outline_when_rendered', () => {
+  const mounted = createEditor('متن');
+  try {
+    assert.ok(hasRule('.cm-focused', 'outline', 'none'));
+  } finally {
+    destroy(mounted);
+  }
+});
+
 test('should_hide_marks_when_rendered', () => {
   const mounted = createEditor('متن\n\n# سلام');
   try {

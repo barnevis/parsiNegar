@@ -82,6 +82,42 @@ test('should_ignore_focus_when_destroyed', () => {
   assert.doesNotThrow(() => editor.focus());
 });
 
+test('should_select_all_when_ctrl_a_pressed_on_persian_layout', () => {
+  const text = 'متن ساده بدون هیچ نشانه‌ای';
+  const host = document.createElement('div');
+  document.body.append(host);
+  const editor = createMarkdownView(host, { document: text });
+  try {
+    const content = host.querySelector('.cm-content');
+    content.focus();
+    content.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ش', code: 'KeyA', ctrlKey: true, bubbles: true, cancelable: true }),
+    );
+    assert.equal(document.getSelection()?.toString(), text);
+  } finally {
+    editor.destroy();
+    host.remove();
+  }
+});
+
+test('should_select_all_when_ctrl_a_pressed_on_latin_layout', () => {
+  const text = 'متن ساده بدون هیچ نشانه‌ای';
+  const host = document.createElement('div');
+  document.body.append(host);
+  const editor = createMarkdownView(host, { document: text });
+  try {
+    const content = host.querySelector('.cm-content');
+    content.focus();
+    content.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'a', code: 'KeyA', ctrlKey: true, bubbles: true, cancelable: true }),
+    );
+    assert.equal(document.getSelection()?.toString(), text);
+  } finally {
+    editor.destroy();
+    host.remove();
+  }
+});
+
 test('should_fail_clearly_when_host_is_not_an_element', () => {
   assert.throws(() => createMarkdownView(null), /element host/);
 });

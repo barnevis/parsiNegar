@@ -7,9 +7,25 @@
 // listeners until destroy() releases them.
 import { EditorView, minimalSetup } from 'codemirror';
 import { markdown } from '@codemirror/lang-markdown';
+import { selectAll } from '@codemirror/commands';
 import { livePreviewExtensions } from './live-preview.js';
 
 const PERSIAN_FONT = "'Vazirmatn', Tahoma, sans-serif";
+
+/**
+ * Matches the select-all gesture on any keyboard layout. Shortcut matching in
+ * CodeMirror and in browsers is based on `event.key`, which follows the active
+ * layout (e.g. `ش` instead of `a` on a Persian layout), so the physical key
+ * position (`event.code`) is checked instead.
+ * @param {KeyboardEvent} event Keydown event.
+ * @returns {boolean} True for Ctrl/⌘+A without other modifiers.
+ */
+function isSelectAllEvent(event) {
+  return event.code === 'KeyA'
+    && (event.ctrlKey || event.metaKey)
+    && !event.altKey
+    && !event.shiftKey;
+}
 
 /**
  * Creates a right-to-left Markdown editing view in the given host element.
@@ -39,6 +55,16 @@ export function createMarkdownView(host, options = {}) {
       markdown(),
       EditorView.lineWrapping,
       ...livePreviewExtensions(),
+      EditorView.domEventHandlers({
+        keydown(event, editorView) {
+          if (isSelectAllEvent(event)) {
+            event.preventDefault();
+            selectAll(editorView);
+            return true;
+          }
+          return false;
+        },
+      }),
       EditorView.editorAttributes.of({ dir: 'rtl', 'aria-label': options.label ?? '' }),
       EditorView.theme({
         '&': {
