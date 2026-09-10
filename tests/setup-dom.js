@@ -19,6 +19,7 @@ for (const [name, value] of Object.entries({
   Event: dom.window.Event,
   CustomEvent: dom.window.CustomEvent,
   KeyboardEvent: dom.window.KeyboardEvent,
+  MouseEvent: dom.window.MouseEvent,
   MutationObserver: dom.window.MutationObserver,
 })) {
   globalThis[name] = value;

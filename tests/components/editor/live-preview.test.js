@@ -76,6 +76,17 @@ test('should_style_heading_when_rendered', () => {
   }
 });
 
+test('should_style_strikethrough_when_rendered', () => {
+  const mounted = createEditor('متن\n\n~~خط خورده~~');
+  try {
+    const struck = mounted.host.querySelector('.parsi-strike');
+    assert.ok(struck, 'expected a strikethrough span');
+    assert.ok(hasRule('.parsi-strike', 'text-decoration', 'line-through'));
+  } finally {
+    destroy(mounted);
+  }
+});
+
 test('should_decorate_quote_line_when_rendered', () => {
   const mounted = createEditor('> نقل‌قول');
   try {

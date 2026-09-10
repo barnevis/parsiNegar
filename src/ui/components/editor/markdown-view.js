@@ -6,9 +6,11 @@
 // its template and mounts the third-party view here. CodeMirror owns its own
 // listeners until destroy() releases them.
 import { EditorView, minimalSetup } from 'codemirror';
-import { markdown } from '@codemirror/lang-markdown';
+import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { selectAll } from '@codemirror/commands';
 import { livePreviewExtensions } from './live-preview.js';
+import { taskListExtensions } from './task-list.js';
+import { textHighlightExtensions } from './text-highlight.js';
 
 const PERSIAN_FONT = "'Vazirmatn', Tahoma, sans-serif";
 
@@ -52,9 +54,11 @@ export function createMarkdownView(host, options = {}) {
     doc: current,
     extensions: [
       minimalSetup,
-      markdown(),
+      markdown({ base: markdownLanguage }),
       EditorView.lineWrapping,
       ...livePreviewExtensions(),
+      ...taskListExtensions(),
+      ...textHighlightExtensions(),
       EditorView.domEventHandlers({
         keydown(event, editorView) {
           if (isSelectAllEvent(event)) {

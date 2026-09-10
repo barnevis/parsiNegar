@@ -10,6 +10,7 @@ import { EditorView } from 'codemirror';
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
 import { Decoration, ViewPlugin, WidgetType, highlightActiveLine } from '@codemirror/view';
 import { tags } from '@lezer/highlight';
+import { TASK_LINE_PATTERN } from './task-list.js';
 
 const PERSIAN_FONT = "'Vazirmatn', Tahoma, sans-serif";
 const MONO_FONT = "'Vazirmatn', ui-monospace, monospace";
@@ -154,7 +155,7 @@ function buildMarkerDecorations(view) {
   for (const { from, to } of view.visibleRanges) {
     for (let pos = from; pos <= to;) {
       const line = view.state.doc.lineAt(pos);
-      if (line.number !== activeLine) {
+      if (line.number !== activeLine && !TASK_LINE_PATTERN.test(line.text)) {
         const match = LIST_PATTERN.exec(line.text);
         if (match) {
           const markerStart = line.from + match[0].indexOf(match[1] ?? match[2]);
